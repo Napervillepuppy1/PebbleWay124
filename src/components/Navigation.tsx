@@ -18,18 +18,18 @@ const Navigation = ({ activeTab, setActiveTab, onNewGoal }: NavigationProps) => 
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4">
-      <div className="glass rounded-full px-4 py-3 shadow-kawaii-lg">
-        <div className="flex items-center justify-between max-w-md mx-auto">
+    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 safe-area-bottom">
+      <div className="glass rounded-2xl px-3 py-2 shadow-kawaii-lg">
+        <div className="flex items-center justify-between max-w-sm mx-auto">
           {navItems.map((item, index) => (
             <Button
               key={item.id}
               variant={activeTab === item.id ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveTab(item.id)}
-              className={`rounded-full p-3 transition-all duration-300 ${
+              className={`rounded-xl p-3 transition-all duration-300 touch-target ${
                 activeTab === item.id 
-                  ? 'bg-primary text-primary-foreground animate-bounce-gentle' 
+                  ? 'bg-primary text-primary-foreground animate-bounce-gentle shadow-kawaii' 
                   : 'hover:bg-accent/50'
               }`}
               style={{ animationDelay: `${index * 0.1}s` }}
@@ -40,7 +40,7 @@ const Navigation = ({ activeTab, setActiveTab, onNewGoal }: NavigationProps) => 
           
           <Button
             onClick={onNewGoal}
-            className="rounded-full p-3 bg-gradient-sunset hover:shadow-kawaii animate-pulse-soft"
+            className="rounded-xl p-3 bg-gradient-to-r from-primary to-accent hover:shadow-kawaii animate-pulse-soft touch-target"
             size="sm"
           >
             <Plus className="w-5 h-5" />

@@ -3,53 +3,148 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Kawaii color palette and design system */
+/* PebbleWay color palette and design system */
 
 @layer base {
   :root {
+    /* Kawaii Pink Theme (Default) */
     --background: 350 100% 98%;
     --foreground: 340 15% 25%;
-
     --card: 0 0% 100%;
     --card-foreground: 340 15% 25%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 340 15% 25%;
-
     --primary: 320 65% 75%;
     --primary-foreground: 0 0% 100%;
-
     --secondary: 200 50% 90%;
     --secondary-foreground: 340 15% 25%;
-
     --muted: 180 30% 95%;
     --muted-foreground: 340 15% 45%;
-
     --accent: 280 60% 85%;
     --accent-foreground: 340 15% 25%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 320 30% 90%;
     --input: 320 30% 90%;
     --ring: 320 65% 75%;
-
     --radius: 1rem;
+    --gradient-primary: linear-gradient(135deg, #ffeef8 0%, #f0e6ff 50%, #e6f3ff 100%);
+    --gradient-secondary: linear-gradient(135deg, #ffe5f1 0%, #ffd6e8 50%, #ffb8dc 100%);
+  }
 
-    --sidebar-background: 350 100% 98%;
-    --sidebar-foreground: 340 15% 25%;
-    --sidebar-primary: 320 65% 75%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 280 60% 85%;
-    --sidebar-accent-foreground: 340 15% 25%;
-    --sidebar-border: 320 30% 90%;
-    --sidebar-ring: 320 65% 75%;
+  /* Ocean Blue Theme */
+  [data-theme="ocean"] {
+    --background: 210 100% 98%;
+    --foreground: 210 15% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 15% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 15% 25%;
+    --primary: 200 85% 70%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 180 50% 90%;
+    --secondary-foreground: 210 15% 25%;
+    --muted: 200 30% 95%;
+    --muted-foreground: 210 15% 45%;
+    --accent: 190 60% 85%;
+    --accent-foreground: 210 15% 25%;
+    --border: 200 30% 90%;
+    --input: 200 30% 90%;
+    --ring: 200 85% 70%;
+    --gradient-primary: linear-gradient(135deg, #e6f3ff 0%, #cce7ff 50%, #b3daff 100%);
+    --gradient-secondary: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
+  }
 
-    /* Kawaii gradients */
-    --gradient-kawaii: linear-gradient(135deg, #ffeef8 0%, #f0e6ff 50%, #e6f3ff 100%);
-    --gradient-sunset: linear-gradient(135deg, #ffe5f1 0%, #ffd6e8 50%, #ffb8dc 100%);
-    --gradient-ocean: linear-gradient(135deg, #e6f3ff 0%, #cce7ff 50%, #b3daff 100%);
+  /* Sunset Orange Theme */
+  [data-theme="sunset"] {
+    --background: 30 100% 98%;
+    --foreground: 20 15% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 15% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 15% 25%;
+    --primary: 25 85% 70%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 50% 90%;
+    --secondary-foreground: 20 15% 25%;
+    --muted: 35 30% 95%;
+    --muted-foreground: 20 15% 45%;
+    --accent: 30 60% 85%;
+    --accent-foreground: 20 15% 25%;
+    --border: 25 30% 90%;
+    --input: 25 30% 90%;
+    --ring: 25 85% 70%;
+    --gradient-primary: linear-gradient(135deg, #fff7ed 0%, #fed7aa 50%, #fb923c 100%);
+    --gradient-secondary: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #f59e0b 100%);
+  }
+
+  /* Forest Green Theme */
+  [data-theme="forest"] {
+    --background: 140 100% 98%;
+    --foreground: 140 15% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 140 15% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 140 15% 25%;
+    --primary: 140 65% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 120 50% 90%;
+    --secondary-foreground: 140 15% 25%;
+    --muted: 130 30% 95%;
+    --muted-foreground: 140 15% 45%;
+    --accent: 135 60% 85%;
+    --accent-foreground: 140 15% 25%;
+    --border: 140 30% 90%;
+    --input: 140 30% 90%;
+    --ring: 140 65% 60%;
+    --gradient-primary: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 50%, #4ade80 100%);
+    --gradient-secondary: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 50%, #34d399 100%);
+  }
+
+  /* Purple Dream Theme */
+  [data-theme="purple"] {
+    --background: 270 100% 98%;
+    --foreground: 270 15% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 270 15% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 270 15% 25%;
+    --primary: 260 85% 70%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 250 50% 90%;
+    --secondary-foreground: 270 15% 25%;
+    --muted: 260 30% 95%;
+    --muted-foreground: 270 15% 45%;
+    --accent: 265 60% 85%;
+    --accent-foreground: 270 15% 25%;
+    --border: 260 30% 90%;
+    --input: 260 30% 90%;
+    --ring: 260 85% 70%;
+    --gradient-primary: linear-gradient(135deg, #faf5ff 0%, #e9d5ff 50%, #a855f7 100%);
+    --gradient-secondary: linear-gradient(135deg, #f3e8ff 0%, #ddd6fe 50%, #8b5cf6 100%);
+  }
+
+  /* Rose Gold Theme */
+  [data-theme="rose"] {
+    --background: 350 100% 98%;
+    --foreground: 345 15% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 345 15% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 345 15% 25%;
+    --primary: 340 82% 75%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 330 50% 90%;
+    --secondary-foreground: 345 15% 25%;
+    --muted: 340 30% 95%;
+    --muted-foreground: 345 15% 45%;
+    --accent: 335 60% 85%;
+    --accent-foreground: 345 15% 25%;
+    --border: 340 30% 90%;
+    --input: 340 30% 90%;
+    --ring: 340 82% 75%;
+    --gradient-primary: linear-gradient(135deg, #fff1f2 0%, #fecdd3 50%, #f43f5e 100%);
+    --gradient-secondary: linear-gradient(135deg, #fdf2f8 0%, #f9a8d4 50%, #ec4899 100%);
   }
 }
 
@@ -59,93 +154,141 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 text-foreground min-h-screen;
+    @apply bg-gradient-to-br text-foreground min-h-screen;
+    background: var(--gradient-primary);
     background-attachment: fixed;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
+  }
+
+  /* Mobile-first responsive typography */
+  html {
+    font-size: 14px;
+  }
+
+  @media (min-width: 375px) {
+    html {
+      font-size: 15px;
+    }
+  }
+
+  @media (min-width: 414px) {
+    html {
+      font-size: 16px;
+    }
   }
 }
 
 @layer utilities {
-  /* Kawaii animations */
+  /* Mobile-optimized animations */
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-8px); }
   }
 
   @keyframes bounce-gentle {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
+    50% { transform: translateY(-4px); }
   }
 
   @keyframes sparkle {
-    0%, 100% { opacity: 0.3; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1.2); }
+    0%, 100% { opacity: 0.4; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
   }
 
   @keyframes slide-in-up {
-    0% { transform: translateY(20px); opacity: 0; }
+    0% { transform: translateY(15px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
   }
 
   @keyframes slide-in-right {
-    0% { transform: translateX(20px); opacity: 0; }
+    0% { transform: translateX(15px); opacity: 0; }
     100% { transform: translateX(0); opacity: 1; }
   }
 
   @keyframes pulse-soft {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(236, 72, 153, 0); }
+    0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
+    70% { box-shadow: 0 0 0 8px hsl(var(--primary) / 0); }
   }
 
   .animate-float {
-    animation: float 3s ease-in-out infinite;
+    animation: float 2.5s ease-in-out infinite;
   }
 
   .animate-bounce-gentle {
-    animation: bounce-gentle 2s ease-in-out infinite;
+    animation: bounce-gentle 1.8s ease-in-out infinite;
   }
 
   .animate-sparkle {
-    animation: sparkle 2s ease-in-out infinite;
+    animation: sparkle 1.5s ease-in-out infinite;
   }
 
   .animate-slide-in-up {
-    animation: slide-in-up 0.5s ease-out;
+    animation: slide-in-up 0.4s ease-out;
   }
 
   .animate-slide-in-right {
-    animation: slide-in-right 0.5s ease-out;
+    animation: slide-in-right 0.4s ease-out;
   }
 
   .animate-pulse-soft {
-    animation: pulse-soft 2s infinite;
+    animation: pulse-soft 1.8s infinite;
   }
 
-  /* Kawaii gradients */
-  .bg-gradient-kawaii {
-    background: var(--gradient-kawaii);
-  }
-
-  .bg-gradient-sunset {
-    background: var(--gradient-sunset);
-  }
-
-  .bg-gradient-ocean {
-    background: var(--gradient-ocean);
-  }
-
-  /* Glass morphism effect */
+  /* Mobile-optimized glass effect */
   .glass {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(12px);
   }
 
-  /* Kawaii shadows */
+  /* Enhanced shadows for mobile */
   .shadow-kawaii {
-    box-shadow: 0 8px 32px rgba(236, 72, 153, 0.12);
+    box-shadow: 0 6px 20px hsl(var(--primary) / 0.15);
   }
 
   .shadow-kawaii-lg {
-    box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15);
+    box-shadow: 0 12px 32px hsl(var(--primary) / 0.2);
   }
+
+  /* Mobile touch targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Safe area handling for mobile */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Disable zoom on input focus for iOS */
+input, select, textarea {
+  font-size: 16px;
+}
+
+/* Smooth scrolling for mobile */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
