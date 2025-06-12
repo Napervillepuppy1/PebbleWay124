@@ -156,18 +156,19 @@
   body {
     @apply bg-gradient-to-br text-foreground;
     background: #f3f4f6;
-    font-size: 16px;
+    font-size: 14px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: manipulation;
   }
 
-  /* Phone frame styling */
+  /* iPhone 12 Pro specific phone frame styling */
   .phone-frame {
     background: var(--gradient-primary);
-    height: 100vh;
-    max-height: 800px;
-    min-height: 600px;
+    width: 390px;
+    height: 844px;
+    border-radius: 60px;
+    border: 8px solid #1f2937;
   }
 
   /* Hide scrollbar */
@@ -180,21 +181,9 @@
     display: none;
   }
 
-  /* Mobile-first responsive typography */
+  /* Mobile-first responsive typography optimized for iPhone 12 Pro */
   html {
     font-size: 14px;
-  }
-
-  @media (min-width: 375px) {
-    html {
-      font-size: 15px;
-    }
-  }
-
-  @media (min-width: 414px) {
-    html {
-      font-size: 16px;
-    }
   }
 }
 
@@ -287,8 +276,8 @@
   }
 }
 
-/* Mobile-specific optimizations */
-@media (max-width: 768px) {
+/* iPhone 12 Pro specific optimizations */
+@media (max-width: 390px) {
   .container {
     padding-left: 1rem;
     padding-right: 1rem;

@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from 'react';
-import Navigation from '@/components/Navigation';
 import Dashboard from '@/components/Dashboard';
 import CalendarView from '@/components/CalendarView';
 import Journal from '@/components/Journal';
@@ -79,6 +78,9 @@ const Index = () => {
             goals={goals}
             onToggleComplete={handleToggleComplete}
             onEditGoal={handleEditGoal}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            onNewGoal={handleNewGoal}
           />
         );
       case 'calendar':
@@ -93,6 +95,9 @@ const Index = () => {
             goals={goals}
             onToggleComplete={handleToggleComplete}
             onEditGoal={handleEditGoal}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            onNewGoal={handleNewGoal}
           />
         );
     }
@@ -100,23 +105,17 @@ const Index = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="phone-frame w-full max-w-sm mx-auto bg-background rounded-3xl shadow-2xl overflow-hidden border-8 border-gray-800 relative">
-        {/* Phone notch */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-gray-800 rounded-b-xl z-50"></div>
+      <div className="phone-frame w-[390px] h-[844px] mx-auto bg-background rounded-[60px] shadow-2xl overflow-hidden border-8 border-gray-900 relative">
+        {/* iPhone 12 Pro notch */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-36 h-7 bg-gray-900 rounded-b-2xl z-50"></div>
         
         {/* Phone screen */}
-        <div className="h-screen max-h-[800px] overflow-hidden relative">
+        <div className="h-full overflow-hidden relative">
           <div className="h-full overflow-y-auto scrollbar-hide">
-            <div className="pt-8 pb-20">
+            <div className="pt-10 pb-4">
               {renderContent()}
             </div>
           </div>
-
-          <Navigation
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            onNewGoal={handleNewGoal}
-          />
         </div>
 
         <GoalModal

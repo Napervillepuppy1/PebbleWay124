@@ -1,5 +1,7 @@
 
 import { useState } from 'react';
+import { Home, Calendar, BookOpen, Settings, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import GoalCard from './GoalCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -17,17 +19,59 @@ interface DashboardProps {
   goals: Goal[];
   onToggleComplete: (id: string) => void;
   onEditGoal: (goal: Goal) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+  onNewGoal: () => void;
 }
 
-const Dashboard = ({ goals, onToggleComplete, onEditGoal }: DashboardProps) => {
+const Dashboard = ({ goals, onToggleComplete, onEditGoal, activeTab, setActiveTab, onNewGoal }: DashboardProps) => {
   const completedGoals = goals.filter(goal => goal.completed);
   const activeGoals = goals.filter(goal => !goal.completed);
   const averageProgress = goals.length > 0 
     ? Math.round(goals.reduce((sum, goal) => sum + goal.progress, 0) / goals.length)
     : 0;
 
+  const navItems = [
+    { id: 'dashboard', icon: Home, label: 'Home' },
+    { id: 'calendar', icon: Calendar, label: 'Calendar' },
+    { id: 'journal', icon: BookOpen, label: 'Journal' },
+    { id: 'settings', icon: Settings, label: 'Settings' },
+  ];
+
   return (
     <div className="px-4 space-y-4">
+      {/* Top Navigation Menu */}
+      <div className="glass rounded-2xl px-3 py-3 shadow-kawaii-lg animate-slide-in-up">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-1">
+            {navItems.map((item, index) => (
+              <Button
+                key={item.id}
+                variant={activeTab === item.id ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setActiveTab(item.id)}
+                className={`rounded-xl p-2 transition-all duration-300 touch-target ${
+                  activeTab === item.id 
+                    ? 'bg-primary text-primary-foreground animate-bounce-gentle shadow-kawaii' 
+                    : 'hover:bg-accent/50'
+                }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <item.icon className="w-4 h-4" />
+              </Button>
+            ))}
+          </div>
+          
+          <Button
+            onClick={onNewGoal}
+            className="rounded-xl p-2 bg-gradient-to-r from-primary to-accent hover:shadow-kawaii animate-pulse-soft touch-target"
+            size="sm"
+          >
+            <Plus className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
       <div className="text-center space-y-2 animate-slide-in-up">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
           Welcome to PebbleWay! 🥌
@@ -108,7 +152,7 @@ const Dashboard = ({ goals, onToggleComplete, onEditGoal }: DashboardProps) => {
         <div className="text-center py-12 animate-float">
           <div className="text-5xl mb-4">🥌</div>
           <h3 className="text-lg font-semibold mb-2">No goals yet!</h3>
-          <p className="text-muted-foreground text-sm px-4">Tap the + button below to create your first goal and start your journey.</p>
+          <p className="text-muted-foreground text-sm px-4">Tap the + button above to create your first goal and start your journey.</p>
         </div>
       )}
     </div>
