@@ -154,13 +154,30 @@
   }
 
   body {
-    @apply bg-gradient-to-br text-foreground min-h-screen;
-    background: var(--gradient-primary);
-    background-attachment: fixed;
+    @apply bg-gradient-to-br text-foreground;
+    background: #f3f4f6;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: manipulation;
+  }
+
+  /* Phone frame styling */
+  .phone-frame {
+    background: var(--gradient-primary);
+    height: 100vh;
+    max-height: 800px;
+    min-height: 600px;
+  }
+
+  /* Hide scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 
   /* Mobile-first responsive typography */

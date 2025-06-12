@@ -27,15 +27,15 @@ const Dashboard = ({ goals, onToggleComplete, onEditGoal }: DashboardProps) => {
     : 0;
 
   return (
-    <div className="space-y-4 pb-24 px-4 safe-area-top">
-      <div className="text-center space-y-2 animate-slide-in-up pt-4">
+    <div className="px-4 space-y-4">
+      <div className="text-center space-y-2 animate-slide-in-up">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
           Welcome to PebbleWay! 🥌
         </h1>
         <p className="text-muted-foreground text-sm">Let's make today amazing together!</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2">
         <Card className="glass shadow-kawaii animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
           <CardHeader className="pb-2">
             <CardTitle className="text-xs font-medium text-muted-foreground text-center">Goals</CardTitle>
