@@ -1,0 +1,64 @@
+{
+  "name": "PebbleWay - Your Kawaii Goals",
+  "short_name": "PebbleWay",
+  "id": "ThePebbleWay",
+  "description": "Transform your dreams into reality with the cutest goal-tracking app ever! PebbleWay brings Japanese kawaii culture to your daily productivity with adorable animations and a pastel aesthetic.",
+  "theme_color": "#edd9d9",
+  "background_color": "#fcdada",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "categories": ["productivity", "lifestyle"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/72x72/edd9d9/ffffff?text=🌸",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://via.placeholder.com/96x96/edd9d9/ffffff?text=🌸",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://via.placeholder.com/128x128/edd9d9/ffffff?text=🌸",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://via.placeholder.com/144x144/edd9d9/ffffff?text=🌸",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://via.placeholder.com/152x152/edd9d9/ffffff?text=🌸",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://via.placeholder.com/192x192/edd9d9/ffffff?text=🌸",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://via.placeholder.com/384x384/edd9d9/ffffff?text=🌸",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/edd9d9/ffffff?text=🌸",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
