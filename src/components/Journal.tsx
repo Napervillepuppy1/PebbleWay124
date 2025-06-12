@@ -1,203 +1,137 @@
 
-import { useState, useEffect } from 'react';
-import { BookOpen, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, Heart, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 
-interface JournalEntry {
-  id: string;
-  date: string;
-  content: string;
-  mood: string;
-  tags: string[];
+interface JournalProps {
+  onBack: () => void;
 }
 
-const Journal = () => {
-  const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newEntry, setNewEntry] = useState({
-    content: '',
-    mood: 'happy',
-    tags: [] as string[]
-  });
+const Journal = ({ onBack }: JournalProps) => {
+  const [todayEntry, setTodayEntry] = useState('');
+  const [mood, setMood] = useState<string>('');
 
-  useEffect(() => {
-    const savedEntries = localStorage.getItem('journal-entries');
-    if (savedEntries) {
-      setEntries(JSON.parse(savedEntries));
-    }
-  }, []);
-
-  const saveEntries = (updatedEntries: JournalEntry[]) => {
-    setEntries(updatedEntries);
-    localStorage.setItem('journal-entries', JSON.stringify(updatedEntries));
-  };
+  const moods = [
+    { emoji: '😊', label: 'Happy', value: 'happy' },
+    { emoji: '😌', label: 'Calm', value: 'calm' },
+    { emoji: '🤔', label: 'Thoughtful', value: 'thoughtful' },
+    { emoji: '😴', label: 'Tired', value: 'tired' },
+    { emoji: '🔥', label: 'Motivated', value: 'motivated' },
+    { emoji: '😔', label: 'Sad', value: 'sad' },
+  ];
 
   const handleSaveEntry = () => {
-    if (newEntry.content.trim()) {
-      const entry: JournalEntry = {
-        id: Date.now().toString(),
-        date: new Date().toISOString(),
-        content: newEntry.content,
-        mood: newEntry.mood,
-        tags: newEntry.tags
+    if (todayEntry.trim() || mood) {
+      const entry = {
+        date: new Date().toISOString().split('T')[0],
+        content: todayEntry,
+        mood: mood,
+        timestamp: new Date().toISOString()
       };
       
-      const updatedEntries = [entry, ...entries];
-      saveEntries(updatedEntries);
+      const existingEntries = JSON.parse(localStorage.getItem('journal-entries') || '[]');
+      const updatedEntries = [entry, ...existingEntries];
+      localStorage.setItem('journal-entries', JSON.stringify(updatedEntries));
       
-      setNewEntry({ content: '', mood: 'happy', tags: [] });
-      setIsModalOpen(false);
+      setTodayEntry('');
+      setMood('');
     }
-  };
-
-  const moodEmojis = {
-    happy: '😊',
-    excited: '🤩',
-    calm: '😌',
-    motivated: '💪',
-    thoughtful: '🤔',
-    grateful: '🙏'
-  };
-
-  const moodColors = {
-    happy: 'bg-yellow-100 text-yellow-800',
-    excited: 'bg-orange-100 text-orange-800',
-    calm: 'bg-blue-100 text-blue-800',
-    motivated: 'bg-green-100 text-green-800',
-    thoughtful: 'bg-purple-100 text-purple-800',
-    grateful: 'bg-pink-100 text-pink-800'
   };
 
   return (
-    <div className="space-y-6 pb-24">
-      <div className="text-center space-y-2 animate-slide-in-up">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent">
-          Goal Journal 📖
-        </h1>
-        <p className="text-muted-foreground">Reflect on your journey and track your thoughts</p>
-      </div>
-
-      <div className="flex justify-center animate-slide-in-right">
+    <div className="px-4 space-y-6">
+      {/* Header with Back Button */}
+      <div className="flex items-center justify-between animate-slide-in-up">
         <Button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-gradient-sunset hover:shadow-kawaii animate-pulse-soft"
+          variant="ghost"
+          size="sm"
+          onClick={onBack}
+          className="rounded-2xl p-2 hover:bg-accent/50 touch-target"
         >
-          <Plus className="w-4 h-4 mr-2" />
-          New Entry
+          <ArrowLeft className="w-5 h-5" />
         </Button>
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          Journal 📝
+        </h1>
+        <div className="w-10"></div>
       </div>
 
-      <div className="space-y-4">
-        {entries.map((entry, index) => (
-          <Card 
-            key={entry.id} 
-            className="glass shadow-kawaii hover:shadow-kawaii-lg transition-all duration-300 animate-slide-in-up"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm text-muted-foreground">
-                  {new Date(entry.date).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </CardTitle>
-                <Badge 
-                  className={`${moodColors[entry.mood as keyof typeof moodColors]} animate-bounce-gentle`}
-                  style={{ animationDelay: `${index * 0.2}s` }}
-                >
-                  {moodEmojis[entry.mood as keyof typeof moodEmojis]} {entry.mood}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-foreground whitespace-pre-wrap mb-3">{entry.content}</p>
-              {entry.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {entry.tags.map((tag, tagIndex) => (
-                    <Badge 
-                      key={tagIndex} 
-                      variant="outline"
-                      className="animate-sparkle"
-                      style={{ animationDelay: `${tagIndex * 0.1}s` }}
-                    >
-                      #{tag}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {entries.length === 0 && (
-        <div className="text-center py-12 animate-float">
-          <div className="text-6xl mb-4">📝</div>
-          <h3 className="text-xl font-semibold mb-2">Start your journal!</h3>
-          <p className="text-muted-foreground">Write your first entry to begin tracking your thoughts and progress.</p>
-        </div>
-      )}
-
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="glass shadow-kawaii-lg animate-slide-in-up">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5 animate-bounce-gentle" />
-              New Journal Entry
-            </DialogTitle>
-          </DialogHeader>
+      {/* Today's Entry */}
+      <Card className="glass shadow-kawaii-lg animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
+        <CardHeader>
+          <CardTitle className="text-lg text-primary flex items-center gap-2">
+            <span className="animate-sparkle">✨</span>
+            How was your day?
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Textarea
+            placeholder="Write about your day, your thoughts, your wins... ✍️"
+            value={todayEntry}
+            onChange={(e) => setTodayEntry(e.target.value)}
+            className="min-h-32 rounded-xl border-primary/20 focus:border-primary/50 glass"
+          />
           
-          <div className="space-y-4">
-            <Textarea
-              placeholder="What's on your mind today? How are your goals progressing?"
-              value={newEntry.content}
-              onChange={(e) => setNewEntry({ ...newEntry, content: e.target.value })}
-              className="min-h-32 border-2 focus:border-primary transition-colors"
-            />
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium">How are you feeling?</label>
-              <div className="grid grid-cols-3 gap-2">
-                {Object.entries(moodEmojis).map(([mood, emoji]) => (
-                  <Button
-                    key={mood}
-                    variant={newEntry.mood === mood ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setNewEntry({ ...newEntry, mood })}
-                    className="transition-all duration-300 hover:scale-105"
-                  >
-                    {emoji} {mood}
-                  </Button>
-                ))}
-              </div>
-            </div>
-            
-            <div className="flex gap-3 pt-4">
-              <Button 
-                variant="outline" 
-                onClick={() => setIsModalOpen(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleSaveEntry}
-                className="flex-1 bg-gradient-sunset hover:shadow-kawaii"
-                disabled={!newEntry.content.trim()}
-              >
-                Save Entry
-              </Button>
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-muted-foreground">How are you feeling?</p>
+            <div className="grid grid-cols-3 gap-2">
+              {moods.map((moodOption) => (
+                <Button
+                  key={moodOption.value}
+                  variant={mood === moodOption.value ? "default" : "ghost"}
+                  onClick={() => setMood(mood === moodOption.value ? '' : moodOption.value)}
+                  className={`rounded-xl p-3 h-auto flex flex-col space-y-1 transition-all duration-200 ${
+                    mood === moodOption.value 
+                      ? 'shadow-kawaii scale-105 animate-bounce-gentle' 
+                      : 'hover:bg-accent/30 hover:scale-105'
+                  }`}
+                >
+                  <span className="text-xl">{moodOption.emoji}</span>
+                  <span className="text-xs">{moodOption.label}</span>
+                </Button>
+              ))}
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+
+          <Button
+            onClick={handleSaveEntry}
+            disabled={!todayEntry.trim() && !mood}
+            className="w-full rounded-xl bg-gradient-to-r from-primary to-accent hover:shadow-kawaii transition-all duration-300 disabled:opacity-50"
+          >
+            Save Entry <Heart className="w-4 h-4 ml-2" />
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Inspiration Quote */}
+      <Card className="glass shadow-kawaii animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
+        <CardContent className="p-4 text-center">
+          <Star className="w-6 h-6 text-primary mx-auto mb-2 animate-sparkle" />
+          <p className="text-sm italic text-muted-foreground mb-2">
+            "Every small step you take today brings you closer to your dreams."
+          </p>
+          <p className="text-xs text-primary font-medium">— Daily Inspiration</p>
+        </CardContent>
+      </Card>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 gap-3">
+        <Card className="glass shadow-kawaii animate-slide-in-up" style={{ animationDelay: '0.3s' }}>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-primary animate-bounce-gentle">7</div>
+            <div className="text-xs text-muted-foreground">Days Journaled</div>
+          </CardContent>
+        </Card>
+        
+        <Card className="glass shadow-kawaii animate-slide-in-up" style={{ animationDelay: '0.4s' }}>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-accent animate-bounce-gentle">✨</div>
+            <div className="text-xs text-muted-foreground">Keep Going!</div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

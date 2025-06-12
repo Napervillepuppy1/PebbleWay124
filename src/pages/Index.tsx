@@ -5,6 +5,7 @@ import CalendarView from '@/components/CalendarView';
 import Journal from '@/components/Journal';
 import Settings from '@/components/Settings';
 import GoalModal from '@/components/GoalModal';
+import Navigation from '@/components/Navigation';
 
 interface Goal {
   id: string;
@@ -78,25 +79,21 @@ const Index = () => {
             goals={goals}
             onToggleComplete={handleToggleComplete}
             onEditGoal={handleEditGoal}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
             onNewGoal={handleNewGoal}
           />
         );
       case 'calendar':
-        return <CalendarView goals={goals} />;
+        return <CalendarView goals={goals} onBack={() => setActiveTab('dashboard')} />;
       case 'journal':
-        return <Journal />;
+        return <Journal onBack={() => setActiveTab('dashboard')} />;
       case 'settings':
-        return <Settings />;
+        return <Settings onBack={() => setActiveTab('dashboard')} />;
       default:
         return (
           <Dashboard
             goals={goals}
             onToggleComplete={handleToggleComplete}
             onEditGoal={handleEditGoal}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
             onNewGoal={handleNewGoal}
           />
         );
@@ -110,12 +107,19 @@ const Index = () => {
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-36 h-7 bg-gray-900 rounded-b-2xl z-50"></div>
         
         {/* Phone screen */}
-        <div className="h-full overflow-hidden relative">
-          <div className="h-full overflow-y-auto scrollbar-hide">
-            <div className="pt-10 pb-4">
+        <div className="h-full overflow-hidden relative flex flex-col">
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <div className="pt-10 pb-20">
               {renderContent()}
             </div>
           </div>
+          
+          {/* Bottom Navigation */}
+          <Navigation 
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            onNewGoal={handleNewGoal}
+          />
         </div>
 
         <GoalModal

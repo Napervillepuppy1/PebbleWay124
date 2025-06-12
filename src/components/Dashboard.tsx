@@ -1,7 +1,4 @@
 
-import { useState } from 'react';
-import { Home, Calendar, BookOpen, Settings, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import GoalCard from './GoalCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -19,73 +16,34 @@ interface DashboardProps {
   goals: Goal[];
   onToggleComplete: (id: string) => void;
   onEditGoal: (goal: Goal) => void;
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
   onNewGoal: () => void;
 }
 
-const Dashboard = ({ goals, onToggleComplete, onEditGoal, activeTab, setActiveTab, onNewGoal }: DashboardProps) => {
+const Dashboard = ({ goals, onToggleComplete, onEditGoal }: DashboardProps) => {
   const completedGoals = goals.filter(goal => goal.completed);
   const activeGoals = goals.filter(goal => !goal.completed);
   const averageProgress = goals.length > 0 
     ? Math.round(goals.reduce((sum, goal) => sum + goal.progress, 0) / goals.length)
     : 0;
 
-  const navItems = [
-    { id: 'dashboard', icon: Home, label: 'Home' },
-    { id: 'calendar', icon: Calendar, label: 'Calendar' },
-    { id: 'journal', icon: BookOpen, label: 'Journal' },
-    { id: 'settings', icon: Settings, label: 'Settings' },
-  ];
-
   return (
-    <div className="px-4 space-y-4">
-      {/* Top Navigation Menu */}
-      <div className="glass rounded-2xl px-3 py-3 shadow-kawaii-lg animate-slide-in-up">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-1">
-            {navItems.map((item, index) => (
-              <Button
-                key={item.id}
-                variant={activeTab === item.id ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setActiveTab(item.id)}
-                className={`rounded-xl p-2 transition-all duration-300 touch-target ${
-                  activeTab === item.id 
-                    ? 'bg-primary text-primary-foreground animate-bounce-gentle shadow-kawaii' 
-                    : 'hover:bg-accent/50'
-                }`}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <item.icon className="w-4 h-4" />
-              </Button>
-            ))}
-          </div>
-          
-          <Button
-            onClick={onNewGoal}
-            className="rounded-xl p-2 bg-gradient-to-r from-primary to-accent hover:shadow-kawaii animate-pulse-soft touch-target"
-            size="sm"
-          >
-            <Plus className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-
+    <div className="px-4 space-y-6">
+      {/* Header */}
       <div className="text-center space-y-2 animate-slide-in-up">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          Welcome to PebbleWay! 🥌
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          PebbleWay 🥌
         </h1>
         <p className="text-muted-foreground text-sm">Let's make today amazing together!</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-3 gap-3">
         <Card className="glass shadow-kawaii animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
           <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-medium text-muted-foreground text-center">Goals</CardTitle>
+            <CardTitle className="text-xs font-medium text-muted-foreground text-center">Total</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="text-xl font-bold text-primary animate-bounce-gentle text-center">{goals.length}</div>
+            <div className="text-2xl font-bold text-primary animate-bounce-gentle text-center">{goals.length}</div>
           </CardContent>
         </Card>
 
@@ -94,7 +52,7 @@ const Dashboard = ({ goals, onToggleComplete, onEditGoal, activeTab, setActiveTa
             <CardTitle className="text-xs font-medium text-muted-foreground text-center">Done</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="text-xl font-bold text-green-600 animate-bounce-gentle text-center">{completedGoals.length}</div>
+            <div className="text-2xl font-bold text-green-600 animate-bounce-gentle text-center">{completedGoals.length}</div>
           </CardContent>
         </Card>
 
@@ -103,14 +61,15 @@ const Dashboard = ({ goals, onToggleComplete, onEditGoal, activeTab, setActiveTa
             <CardTitle className="text-xs font-medium text-muted-foreground text-center">Progress</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="text-xl font-bold text-blue-600 animate-bounce-gentle text-center">{averageProgress}%</div>
+            <div className="text-2xl font-bold text-blue-600 animate-bounce-gentle text-center">{averageProgress}%</div>
           </CardContent>
         </Card>
       </div>
 
+      {/* Active Goals */}
       {activeGoals.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold flex items-center gap-2 animate-slide-in-right">
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold flex items-center gap-2 animate-slide-in-right px-1">
             <span className="animate-sparkle">🎯</span>
             Active Goals
           </h2>
@@ -128,9 +87,10 @@ const Dashboard = ({ goals, onToggleComplete, onEditGoal, activeTab, setActiveTa
         </div>
       )}
 
+      {/* Completed Goals */}
       {completedGoals.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold flex items-center gap-2 animate-slide-in-right">
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold flex items-center gap-2 animate-slide-in-right px-1">
             <span className="animate-sparkle">🎉</span>
             Completed Goals
           </h2>
@@ -148,11 +108,14 @@ const Dashboard = ({ goals, onToggleComplete, onEditGoal, activeTab, setActiveTa
         </div>
       )}
 
+      {/* Empty State */}
       {goals.length === 0 && (
-        <div className="text-center py-12 animate-float">
-          <div className="text-5xl mb-4">🥌</div>
-          <h3 className="text-lg font-semibold mb-2">No goals yet!</h3>
-          <p className="text-muted-foreground text-sm px-4">Tap the + button above to create your first goal and start your journey.</p>
+        <div className="text-center py-16 animate-float">
+          <div className="text-6xl mb-6 animate-bounce-gentle">🥌</div>
+          <h3 className="text-xl font-semibold mb-3 text-primary">No goals yet!</h3>
+          <p className="text-muted-foreground text-sm px-6 leading-relaxed">
+            Tap the + button below to create your first goal and start your amazing journey.
+          </p>
         </div>
       )}
     </div>

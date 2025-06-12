@@ -1,5 +1,4 @@
 
-import { useState } from 'react';
 import { Home, Calendar, BookOpen, Settings, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -18,29 +17,31 @@ const Navigation = ({ activeTab, setActiveTab, onNewGoal }: NavigationProps) => 
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 safe-area-bottom">
-      <div className="glass rounded-2xl px-3 py-2 shadow-kawaii-lg">
-        <div className="flex items-center justify-between max-w-sm mx-auto">
-          {navItems.map((item, index) => (
-            <Button
-              key={item.id}
-              variant={activeTab === item.id ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setActiveTab(item.id)}
-              className={`rounded-xl p-3 transition-all duration-300 touch-target ${
-                activeTab === item.id 
-                  ? 'bg-primary text-primary-foreground animate-bounce-gentle shadow-kawaii' 
-                  : 'hover:bg-accent/50'
-              }`}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <item.icon className="w-5 h-5" />
-            </Button>
-          ))}
+    <div className="absolute bottom-0 left-0 right-0 z-50 p-4">
+      <div className="glass rounded-3xl px-4 py-3 shadow-kawaii-lg backdrop-blur-lg border border-white/20">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            {navItems.map((item, index) => (
+              <Button
+                key={item.id}
+                variant={activeTab === item.id ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setActiveTab(item.id)}
+                className={`rounded-2xl p-3 transition-all duration-300 touch-target ${
+                  activeTab === item.id 
+                    ? 'bg-primary text-primary-foreground animate-bounce-gentle shadow-kawaii scale-110' 
+                    : 'hover:bg-accent/50 hover:scale-105'
+                }`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <item.icon className="w-5 h-5" />
+              </Button>
+            ))}
+          </div>
           
           <Button
             onClick={onNewGoal}
-            className="rounded-xl p-3 bg-gradient-to-r from-primary to-accent hover:shadow-kawaii animate-pulse-soft touch-target"
+            className="rounded-2xl p-3 bg-gradient-to-r from-primary to-accent hover:shadow-kawaii animate-pulse-soft touch-target hover:scale-110 transition-all duration-300"
             size="sm"
           >
             <Plus className="w-5 h-5" />

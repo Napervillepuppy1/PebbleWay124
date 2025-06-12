@@ -156,10 +156,11 @@
   body {
     @apply bg-gradient-to-br text-foreground;
     background: #f3f4f6;
-    font-size: 14px;
+    font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: manipulation;
+    user-select: none;
   }
 
   /* iPhone 12 Pro specific phone frame styling */
@@ -169,6 +170,8 @@
     height: 844px;
     border-radius: 60px;
     border: 8px solid #1f2937;
+    position: relative;
+    overflow: hidden;
   }
 
   /* Hide scrollbar */
@@ -183,87 +186,98 @@
 
   /* Mobile-first responsive typography optimized for iPhone 12 Pro */
   html {
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 
 @layer utilities {
-  /* Mobile-optimized animations */
+  /* Enhanced mobile-optimized animations */
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
+    50% { transform: translateY(-10px); }
   }
 
   @keyframes bounce-gentle {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-4px); }
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-6px) scale(1.02); }
   }
 
   @keyframes sparkle {
-    0%, 100% { opacity: 0.4; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.1); }
+    0%, 100% { opacity: 0.6; transform: scale(1) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.15) rotate(5deg); }
   }
 
   @keyframes slide-in-up {
-    0% { transform: translateY(15px); opacity: 0; }
+    0% { transform: translateY(20px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
   }
 
   @keyframes slide-in-right {
-    0% { transform: translateX(15px); opacity: 0; }
+    0% { transform: translateX(20px); opacity: 0; }
     100% { transform: translateX(0); opacity: 1; }
   }
 
   @keyframes pulse-soft {
-    0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
-    70% { box-shadow: 0 0 0 8px hsl(var(--primary) / 0); }
+    0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.6); transform: scale(1); }
+    70% { box-shadow: 0 0 0 10px hsl(var(--primary) / 0); transform: scale(1.02); }
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 
   .animate-float {
-    animation: float 2.5s ease-in-out infinite;
+    animation: float 3s ease-in-out infinite;
   }
 
   .animate-bounce-gentle {
-    animation: bounce-gentle 1.8s ease-in-out infinite;
+    animation: bounce-gentle 2s ease-in-out infinite;
   }
 
   .animate-sparkle {
-    animation: sparkle 1.5s ease-in-out infinite;
+    animation: sparkle 2s ease-in-out infinite;
   }
 
   .animate-slide-in-up {
-    animation: slide-in-up 0.4s ease-out;
+    animation: slide-in-up 0.5s ease-out;
   }
 
   .animate-slide-in-right {
-    animation: slide-in-right 0.4s ease-out;
+    animation: slide-in-right 0.5s ease-out;
   }
 
   .animate-pulse-soft {
-    animation: pulse-soft 1.8s infinite;
+    animation: pulse-soft 2s infinite;
   }
 
-  /* Mobile-optimized glass effect */
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  /* Enhanced mobile-optimized glass effect */
   .glass {
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   }
 
   /* Enhanced shadows for mobile */
   .shadow-kawaii {
-    box-shadow: 0 6px 20px hsl(var(--primary) / 0.15);
+    box-shadow: 0 8px 25px hsl(var(--primary) / 0.2), 0 4px 10px rgba(0, 0, 0, 0.05);
   }
 
   .shadow-kawaii-lg {
-    box-shadow: 0 12px 32px hsl(var(--primary) / 0.2);
+    box-shadow: 0 15px 40px hsl(var(--primary) / 0.25), 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 
-  /* Mobile touch targets */
+  /* Enhanced mobile touch targets */
   .touch-target {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 48px;
+    min-width: 48px;
   }
 
   /* Safe area handling for mobile */
@@ -274,6 +288,24 @@
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
+
+  /* Custom scrollbars for webkit browsers */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.3);
+    border-radius: 2px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
+  }
 }
 
 /* iPhone 12 Pro specific optimizations */
@@ -282,11 +314,21 @@
     padding-left: 1rem;
     padding-right: 1rem;
   }
+  
+  html {
+    font-size: 15px;
+  }
 }
 
-/* Disable zoom on input focus for iOS */
+/* Improved input handling for iOS */
 input, select, textarea {
   font-size: 16px;
+  border-radius: 12px;
+}
+
+input:focus, select:focus, textarea:focus {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
 }
 
 /* Smooth scrolling for mobile */
@@ -294,7 +336,39 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Remove tap highlight on mobile */
+/* Remove tap highlight and improve touch interactions */
 * {
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Allow text selection in specific areas */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Enhanced button interactions */
+button {
+  transform: translateZ(0);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:active {
+  transform: scale(0.98) translateZ(0);
+}
+
+/* Custom focus styles */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
 }
