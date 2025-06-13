@@ -20,6 +20,7 @@ interface Goal {
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ email: string; username: string } | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
@@ -28,8 +29,10 @@ const Index = () => {
 
   useEffect(() => {
     // Check if user was previously logged in
-    const wasLoggedIn = localStorage.getItem('kawaii-auth');
-    if (wasLoggedIn) {
+    const currentUserData = localStorage.getItem('kawaii-current-user');
+    if (currentUserData) {
+      const userData = JSON.parse(currentUserData);
+      setCurrentUser(userData);
       setIsAuthenticated(true);
     }
 
@@ -44,14 +47,16 @@ const Index = () => {
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = (userData: { email: string; username: string }) => {
+    setCurrentUser(userData);
     setIsAuthenticated(true);
-    localStorage.setItem('kawaii-auth', 'true');
+    localStorage.setItem('kawaii-current-user', JSON.stringify(userData));
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('kawaii-auth');
+    setCurrentUser(null);
+    localStorage.removeItem('kawaii-current-user');
     setActiveTab('dashboard');
   };
 

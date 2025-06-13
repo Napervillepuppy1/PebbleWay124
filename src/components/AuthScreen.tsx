@@ -3,28 +3,143 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, Sparkles } from 'lucide-react';
+import { Heart, Sparkles, Eye, EyeOff } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface AuthScreenProps {
-  onLogin: () => void;
+  onLogin: (userData: { email: string; username: string }) => void;
 }
 
 const AuthScreen = ({ onLogin }: AuthScreenProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin();
+    setIsLoading(true);
+
+    // Validate email
+    if (!validateEmail(email)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate password
+    if (password.length < 6) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive"
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate confirm password for signup
+    if (!isLogin && password !== confirmPassword) {
+      toast({
+        title: "Passwords don't match",
+        description: "Please make sure your passwords match",
+        variant: "destructive"
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate username for signup
+    if (!isLogin && username.trim().length < 2) {
+      toast({
+        title: "Username too short",
+        description: "Username must be at least 2 characters long",
+        variant: "destructive"
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      if (isLogin) {
+        // Login logic - check if user exists
+        const existingUsers = JSON.parse(localStorage.getItem('kawaii-users') || '[]');
+        const user = existingUsers.find((u: any) => u.email === email && u.password === password);
+        
+        if (user) {
+          localStorage.setItem('kawaii-current-user', JSON.stringify(user));
+          toast({
+            title: "Welcome back! 💖",
+            description: `Good to see you again, ${user.username}!`,
+          });
+          onLogin({ email: user.email, username: user.username });
+        } else {
+          toast({
+            title: "Login failed",
+            description: "Invalid email or password",
+            variant: "destructive"
+          });
+        }
+      } else {
+        // Signup logic - check if user already exists
+        const existingUsers = JSON.parse(localStorage.getItem('kawaii-users') || '[]');
+        const userExists = existingUsers.find((u: any) => u.email === email);
+        
+        if (userExists) {
+          toast({
+            title: "Account exists",
+            description: "An account with this email already exists. Please login instead.",
+            variant: "destructive"
+          });
+        } else {
+          // Create new user
+          const newUser = {
+            id: Date.now().toString(),
+            email,
+            username,
+            password,
+            createdAt: new Date().toISOString()
+          };
+          
+          const updatedUsers = [...existingUsers, newUser];
+          localStorage.setItem('kawaii-users', JSON.stringify(updatedUsers));
+          localStorage.setItem('kawaii-current-user', JSON.stringify(newUser));
+          
+          toast({
+            title: "Account created! 🌟",
+            description: `Welcome to PebbleWay, ${username}!`,
+          });
+          onLogin({ email: newUser.email, username: newUser.username });
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description: "Please try again later",
+        variant: "destructive"
+      });
+    }
+    
+    setIsLoading(false);
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="phone-frame w-[375px] h-[812px] mx-auto bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 rounded-[50px] shadow-2xl overflow-hidden border-6 border-gray-900 relative">
+      <div className="phone-frame w-[375px] h-[750px] mx-auto bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 rounded-[45px] shadow-2xl overflow-hidden border-4 border-gray-900 relative">
         {/* iPhone 11 Pro notch */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-2xl z-50"></div>
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-5 bg-gray-900 rounded-b-2xl z-50"></div>
         
         <div className="h-full flex flex-col justify-center p-6 pt-12">
           {/* Logo/Branding */}
@@ -44,7 +159,7 @@ const AuthScreen = ({ onLogin }: AuthScreenProps) => {
           </div>
 
           {/* Auth Card */}
-          <Card className="glass border-0 shadow-kawaii-lg backdrop-blur-lg mx-2">
+          <Card className="glass border-0 shadow-kawaii-lg backdrop-blur-lg mx-2 max-h-[500px] overflow-y-auto">
             <CardHeader className="text-center space-y-2 pb-4">
               <CardTitle className="text-xl font-bold text-gray-800">
                 {isLogin ? 'Welcome Back!' : 'Join PebbleWay'}
@@ -61,14 +176,15 @@ const AuthScreen = ({ onLogin }: AuthScreenProps) => {
               <form onSubmit={handleSubmit} className="space-y-3">
                 {!isLogin && (
                   <div className="space-y-1">
-                    <label className="text-sm font-medium text-gray-700">Name</label>
+                    <label className="text-sm font-medium text-gray-700">Username</label>
                     <Input
                       type="text"
-                      placeholder="Your cute name ✨"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Your cute username ✨"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                       className="rounded-2xl border-pink-200 focus:border-pink-400 focus:ring-pink-400 text-sm"
                       required={!isLogin}
+                      minLength={2}
                     />
                   </div>
                 )}
@@ -87,21 +203,49 @@ const AuthScreen = ({ onLogin }: AuthScreenProps) => {
                 
                 <div className="space-y-1">
                   <label className="text-sm font-medium text-gray-700">Password</label>
-                  <Input
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="rounded-2xl border-pink-200 focus:border-pink-400 focus:ring-pink-400 text-sm"
-                    required
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="rounded-2xl border-pink-200 focus:border-pink-400 focus:ring-pink-400 text-sm pr-10"
+                      required
+                      minLength={6}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </Button>
+                  </div>
                 </div>
+
+                {!isLogin && (
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium text-gray-700">Confirm Password</label>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="rounded-2xl border-pink-200 focus:border-pink-400 focus:ring-pink-400 text-sm"
+                      required={!isLogin}
+                      minLength={6}
+                    />
+                  </div>
+                )}
 
                 <Button 
                   type="submit"
-                  className="w-full rounded-2xl bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white font-medium py-2 transition-all duration-300 hover:scale-105 shadow-kawaii text-sm"
+                  disabled={isLoading}
+                  className="w-full rounded-2xl bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white font-medium py-2 transition-all duration-300 hover:scale-105 shadow-kawaii text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLogin ? 'Sign In 💖' : 'Create Account 🌟'}
+                  {isLoading ? 'Please wait...' : (isLogin ? 'Sign In 💖' : 'Create Account 🌟')}
                 </Button>
               </form>
 
@@ -116,13 +260,6 @@ const AuthScreen = ({ onLogin }: AuthScreenProps) => {
                   >
                     {isLogin ? 'Sign up' : 'Sign in'}
                   </button>
-                </p>
-              </div>
-
-              {/* Demo login hint */}
-              <div className="p-2 bg-pink-50 rounded-xl border border-pink-200">
-                <p className="text-xs text-pink-700 text-center">
-                  💡 This is a demo - any email/password will work!
                 </p>
               </div>
             </CardContent>
