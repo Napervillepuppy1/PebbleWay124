@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import Dashboard from '@/components/Dashboard';
 import CalendarView from '@/components/CalendarView';
@@ -20,7 +19,7 @@ interface Goal {
 }
 
 const Index = () => {
-  const [isAuthenticate, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
