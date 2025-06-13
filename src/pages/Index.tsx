@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import Dashboard from '@/components/Dashboard';
 import CalendarView from '@/components/CalendarView';
@@ -6,6 +5,7 @@ import Journal from '@/components/Journal';
 import Settings from '@/components/Settings';
 import GoalModal from '@/components/GoalModal';
 import Navigation from '@/components/Navigation';
+import AuthScreen from '@/components/AuthScreen';
 
 interface Goal {
   id: string;
@@ -18,17 +18,35 @@ interface Goal {
 }
 
 const Index = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   useEffect(() => {
+    // Check if user was previously logged in
+    const wasLoggedIn = localStorage.getItem('kawaii-auth');
+    if (wasLoggedIn) {
+      setIsAuthenticated(true);
+    }
+
     const savedGoals = localStorage.getItem('kawaii-goals');
     if (savedGoals) {
       setGoals(JSON.parse(savedGoals));
     }
   }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('kawaii-auth', 'true');
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('kawaii-auth');
+    setActiveTab('dashboard');
+  };
 
   const saveGoals = (updatedGoals: Goal[]) => {
     setGoals(updatedGoals);
@@ -87,7 +105,7 @@ const Index = () => {
       case 'journal':
         return <Journal onBack={() => setActiveTab('dashboard')} />;
       case 'settings':
-        return <Settings onBack={() => setActiveTab('dashboard')} />;
+        return <Settings onBack={() => setActiveTab('dashboard')} onLogout={handleLogout} />;
       default:
         return (
           <Dashboard
@@ -99,6 +117,11 @@ const Index = () => {
         );
     }
   };
+
+  // Show auth screen if not authenticated
+  if (!isAuthenticated) {
+    return <AuthScreen onLogin={handleLogin} />;
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
