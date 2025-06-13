@@ -73,46 +73,46 @@ const GoalModal = ({ isOpen, onClose, onSave, goal }: GoalModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass shadow-kawaii-lg animate-slide-in-up">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <span className="animate-sparkle">✨</span>
+      <DialogContent className="w-[90vw] max-w-[320px] max-h-[85vh] overflow-y-auto glass shadow-kawaii-lg animate-slide-in-up rounded-3xl border-2 border-white/20 bg-gradient-to-br from-background/95 to-accent/10 backdrop-blur-xl">
+        <DialogHeader className="pb-4">
+          <DialogTitle className="flex items-center justify-center gap-2 text-lg">
+            <span className="animate-sparkle text-2xl">✨</span>
             {goal ? 'Edit Goal' : 'Create New Goal'}
           </DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Goal Title</Label>
+            <Label htmlFor="title" className="text-sm font-medium">Goal Title</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="Enter your amazing goal..."
               required
-              className="border-2 focus:border-primary transition-colors"
+              className="rounded-2xl border-2 focus:border-primary transition-colors bg-background/80 backdrop-blur-sm"
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description" className="text-sm font-medium">Description</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Describe your goal in detail..."
-              className="border-2 focus:border-primary transition-colors min-h-20"
+              placeholder="Describe your goal..."
+              className="rounded-2xl border-2 focus:border-primary transition-colors min-h-16 bg-background/80 backdrop-blur-sm resize-none"
             />
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
+              <Label htmlFor="category" className="text-sm font-medium">Category</Label>
               <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-2xl bg-background/80 backdrop-blur-sm">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-2xl bg-background/95 backdrop-blur-xl border-2 border-white/20">
                   <SelectItem value="health">🌱 Health</SelectItem>
                   <SelectItem value="career">💼 Career</SelectItem>
                   <SelectItem value="personal">✨ Personal</SelectItem>
@@ -122,20 +122,20 @@ const GoalModal = ({ isOpen, onClose, onSave, goal }: GoalModalProps) => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="targetDate">Target Date</Label>
+              <Label htmlFor="targetDate" className="text-sm font-medium">Target Date</Label>
               <Input
                 id="targetDate"
                 type="date"
                 value={formData.targetDate}
                 onChange={(e) => setFormData({ ...formData, targetDate: e.target.value })}
                 required
-                className="border-2 focus:border-primary transition-colors"
+                className="rounded-2xl border-2 focus:border-primary transition-colors bg-background/80 backdrop-blur-sm"
               />
             </div>
           </div>
           
           <div className="space-y-2">
-            <Label>Progress: {formData.progress[0]}%</Label>
+            <Label className="text-sm font-medium">Progress: {formData.progress[0]}%</Label>
             <Slider
               value={formData.progress}
               onValueChange={(value) => setFormData({ ...formData, progress: value })}
@@ -145,12 +145,20 @@ const GoalModal = ({ isOpen, onClose, onSave, goal }: GoalModalProps) => {
             />
           </div>
           
-          <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+          <div className="flex gap-2 pt-2">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onClose} 
+              className="flex-1 rounded-2xl bg-background/50 backdrop-blur-sm border-2 hover:bg-background/70"
+            >
               Cancel
             </Button>
-            <Button type="submit" className="flex-1 bg-gradient-sunset hover:shadow-kawaii">
-              {goal ? 'Update Goal' : 'Create Goal'}
+            <Button 
+              type="submit" 
+              className="flex-1 rounded-2xl bg-gradient-to-r from-primary to-accent hover:shadow-kawaii transition-all duration-300"
+            >
+              {goal ? 'Update' : 'Create'}
             </Button>
           </div>
         </form>

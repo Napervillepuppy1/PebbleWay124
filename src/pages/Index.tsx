@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import Dashboard from '@/components/Dashboard';
 import CalendarView from '@/components/CalendarView';
@@ -19,7 +20,7 @@ interface Goal {
 }
 
 const Index = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticate, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
@@ -140,14 +141,14 @@ const Index = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="phone-frame w-[375px] h-[812px] mx-auto bg-background rounded-[50px] shadow-2xl overflow-hidden border-6 border-gray-900 relative">
+      <div className="phone-frame w-[375px] h-[750px] mx-auto bg-background rounded-[45px] shadow-2xl overflow-hidden border-4 border-gray-900 relative">
         {/* iPhone 11 Pro notch */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-2xl z-50"></div>
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-5 bg-gray-900 rounded-b-2xl z-50"></div>
         
         {/* Phone screen */}
         <div className="h-full overflow-hidden relative flex flex-col">
           <div className="flex-1 overflow-y-auto scrollbar-hide">
-            <div className="pt-8 pb-20">
+            <div className="pt-6 pb-20">
               {renderContent()}
             </div>
           </div>

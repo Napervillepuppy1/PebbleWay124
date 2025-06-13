@@ -1,6 +1,10 @@
 
-import { ArrowLeft, User, Bell, Palette, Info, LogOut, Moon, Sun } from 'lucide-react';
+import { ArrowLeft, User, Bell, Palette, Info, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import Profile from './Profile';
+import About from './About';
+import Notifications from './Notifications';
 
 interface SettingsProps {
   onBack: () => void;
@@ -10,6 +14,20 @@ interface SettingsProps {
 }
 
 const Settings = ({ onBack, onLogout, onThemeChange, currentTheme }: SettingsProps) => {
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  if (activeSection === 'profile') {
+    return <Profile onBack={() => setActiveSection(null)} />;
+  }
+
+  if (activeSection === 'notifications') {
+    return <Notifications onBack={() => setActiveSection(null)} />;
+  }
+
+  if (activeSection === 'about') {
+    return <About onBack={() => setActiveSection(null)} />;
+  }
+
   const themes = [
     { id: 'default', name: 'Kawaii Pink', color: 'from-pink-400 to-purple-400' },
     { id: 'ocean', name: 'Ocean Blue', color: 'from-blue-400 to-cyan-400' },
@@ -20,9 +38,24 @@ const Settings = ({ onBack, onLogout, onThemeChange, currentTheme }: SettingsPro
   ];
 
   const settingsItems = [
-    { icon: User, label: 'Profile', description: 'Manage your account' },
-    { icon: Bell, label: 'Notifications', description: 'Goal reminders & updates' },
-    { icon: Info, label: 'About', description: 'Version & support info' },
+    { 
+      icon: User, 
+      label: 'Profile', 
+      description: 'Manage your account',
+      onClick: () => setActiveSection('profile')
+    },
+    { 
+      icon: Bell, 
+      label: 'Notifications', 
+      description: 'Goal reminders & updates',
+      onClick: () => setActiveSection('notifications')
+    },
+    { 
+      icon: Info, 
+      label: 'About', 
+      description: 'Version & support info',
+      onClick: () => setActiveSection('about')
+    },
   ];
 
   return (
@@ -73,6 +106,7 @@ const Settings = ({ onBack, onLogout, onThemeChange, currentTheme }: SettingsPro
         {settingsItems.map((item, index) => (
           <div
             key={item.label}
+            onClick={item.onClick}
             className="glass rounded-2xl p-3 hover:shadow-kawaii transition-all duration-300 cursor-pointer animate-slide-in-up touch-target"
             style={{ animationDelay: `${(index + 6) * 0.1}s` }}
           >

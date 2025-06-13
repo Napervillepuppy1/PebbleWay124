@@ -93,13 +93,13 @@
     user-select: none;
   }
 
-  /* iPhone 11 Pro specific phone frame styling */
+  /* Compact iPhone frame styling */
   .phone-frame {
     background: var(--gradient-primary);
     width: 375px;
-    height: 812px;
-    border-radius: 50px;
-    border: 6px solid #1f2937;
+    height: 750px;
+    border-radius: 45px;
+    border: 4px solid #1f2937;
     position: relative;
     overflow: hidden;
   }
@@ -114,7 +114,7 @@
     display: none;
   }
 
-  /* Mobile-first responsive typography optimized for iPhone 11 Pro */
+  /* Mobile-first responsive typography */
   html {
     font-size: 16px;
   }
@@ -201,19 +201,7 @@
   }
 }
 
-/* iPhone 11 Pro specific optimizations */
-@media (max-width: 375px) {
-  .container {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-  
-  html {
-    font-size: 14px;
-  }
-}
-
-/* Improved input handling for iOS */
+/* Enhanced input handling for iOS */
 input, select, textarea {
   font-size: 16px;
   border-radius: 12px;
