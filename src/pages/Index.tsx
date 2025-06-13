@@ -3,6 +3,7 @@ import Dashboard from '@/components/Dashboard';
 import CalendarView from '@/components/CalendarView';
 import Journal from '@/components/Journal';
 import Settings from '@/components/Settings';
+import Library from '@/components/Library';
 import GoalModal from '@/components/GoalModal';
 import Navigation from '@/components/Navigation';
 import AuthScreen from '@/components/AuthScreen';
@@ -23,6 +24,7 @@ const Index = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [theme, setTheme] = useState('default');
 
   useEffect(() => {
     // Check if user was previously logged in
@@ -35,6 +37,11 @@ const Index = () => {
     if (savedGoals) {
       setGoals(JSON.parse(savedGoals));
     }
+
+    // Load theme
+    const savedTheme = localStorage.getItem('kawaii-theme') || 'default';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
   const handleLogin = () => {
@@ -46,6 +53,12 @@ const Index = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('kawaii-auth');
     setActiveTab('dashboard');
+  };
+
+  const handleThemeChange = (newTheme: string) => {
+    setTheme(newTheme);
+    localStorage.setItem('kawaii-theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
   };
 
   const saveGoals = (updatedGoals: Goal[]) => {
@@ -104,8 +117,10 @@ const Index = () => {
         return <CalendarView goals={goals} onBack={() => setActiveTab('dashboard')} />;
       case 'journal':
         return <Journal onBack={() => setActiveTab('dashboard')} />;
+      case 'library':
+        return <Library onBack={() => setActiveTab('dashboard')} />;
       case 'settings':
-        return <Settings onBack={() => setActiveTab('dashboard')} onLogout={handleLogout} />;
+        return <Settings onBack={() => setActiveTab('dashboard')} onLogout={handleLogout} onThemeChange={handleThemeChange} currentTheme={theme} />;
       default:
         return (
           <Dashboard
@@ -125,14 +140,14 @@ const Index = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="phone-frame w-[390px] h-[844px] mx-auto bg-background rounded-[60px] shadow-2xl overflow-hidden border-8 border-gray-900 relative">
-        {/* iPhone 12 Pro notch */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-36 h-7 bg-gray-900 rounded-b-2xl z-50"></div>
+      <div className="phone-frame w-[375px] h-[812px] mx-auto bg-background rounded-[50px] shadow-2xl overflow-hidden border-6 border-gray-900 relative">
+        {/* iPhone 11 Pro notch */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-2xl z-50"></div>
         
         {/* Phone screen */}
         <div className="h-full overflow-hidden relative flex flex-col">
           <div className="flex-1 overflow-y-auto scrollbar-hide">
-            <div className="pt-10 pb-20">
+            <div className="pt-8 pb-20">
               {renderContent()}
             </div>
           </div>
