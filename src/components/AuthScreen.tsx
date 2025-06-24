@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, Sparkles, Eye, EyeOff } from 'lucide-react';
+import { Heart, Sparkles, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
 import { useToast } from '@/hooks/use-toast';
 
 interface AuthScreenProps {
@@ -18,7 +19,9 @@ const AuthScreen = ({ onLogin }: AuthScreenProps) => {
   const [username, setUsername] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showResetPassword, setShowResetPassword] = useState(false);
   const { toast } = useToast();
+  const { signUp, signIn, resetPassword } = useSupabaseAuth();
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -74,55 +77,28 @@ const AuthScreen = ({ onLogin }: AuthScreenProps) => {
 
     try {
       if (isLogin) {
-        // Login logic - check if user exists
-        const existingUsers = JSON.parse(localStorage.getItem('kawaii-users') || '[]');
-        const user = existingUsers.find((u: any) => u.email === email && u.password === password);
+        const { user, error } = await signIn(email, password);
         
-        if (user) {
-          localStorage.setItem('kawaii-current-user', JSON.stringify(user));
-          toast({
-            title: "Welcome back! 💖",
-            description: `Good to see you again, ${user.username}!`,
-          });
-          onLogin({ email: user.email, username: user.username });
-        } else {
+        if (error) {
           toast({
             title: "Login failed",
-            description: "Invalid email or password",
+            description: error.message,
             variant: "destructive"
           });
+        } else if (user) {
+          onLogin({ email: user.email!, username: user.user_metadata?.username || user.email!.split('@')[0] });
         }
       } else {
-        // Signup logic - check if user already exists
-        const existingUsers = JSON.parse(localStorage.getItem('kawaii-users') || '[]');
-        const userExists = existingUsers.find((u: any) => u.email === email);
+        const { user, error } = await signUp(email, password, username);
         
-        if (userExists) {
+        if (error) {
           toast({
-            title: "Account exists",
-            description: "An account with this email already exists. Please login instead.",
+            title: "Sign up failed",
+            description: error.message,
             variant: "destructive"
           });
-        } else {
-          // Create new user
-          const newUser = {
-            id: Date.now().toString(),
-            email,
-            username,
-            password,
-            createdAt: new Date().toISOString()
-          };
-          
-          const updatedUsers = [...existingUsers, newUser];
-          localStorage.setItem('kawaii-users', JSON.stringify(updatedUsers));
-          localStorage.setItem('kawaii-current-user', JSON.stringify(newUser));
-          
-          toast({
-            title: "Account created! 🌟",
-            description: `Welcome to PebbleWay, ${username}!`,
-          });
-          onLogin({ email: newUser.email, username: newUser.username });
         }
+        // Note: For sign up, user will need to confirm email before they can login
       }
     } catch (error) {
       toast({
@@ -134,6 +110,109 @@ const AuthScreen = ({ onLogin }: AuthScreenProps) => {
     
     setIsLoading(false);
   };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if (!validateEmail(email)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    const { error } = await resetPassword(email);
+    
+    if (error) {
+      toast({
+        title: "Reset failed",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+
+    setIsLoading(false);
+    setShowResetPassword(false);
+  };
+
+  if (showResetPassword) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+        <div className="phone-frame w-[375px] h-[750px] mx-auto bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 rounded-[45px] shadow-2xl overflow-hidden border-4 border-gray-900 relative">
+          {/* iPhone 11 Pro notch */}
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-5 bg-gray-900 rounded-b-2xl z-50"></div>
+          
+          <div className="h-full flex flex-col justify-center p-6 pt-12">
+            {/* Logo/Branding */}
+            <div className="text-center space-y-4 mb-6">
+              <div className="flex justify-center items-center space-x-2 animate-bounce-gentle">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 flex items-center justify-center">
+                  <Heart className="w-6 h-6 text-white" />
+                </div>
+                <Sparkles className="w-8 h-8 text-pink-400 animate-sparkle" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+                  PebbleWay
+                </h1>
+                <p className="text-gray-600 text-base mt-2">Reset Password</p>
+              </div>
+            </div>
+
+            {/* Reset Password Card */}
+            <Card className="glass border-0 shadow-kawaii-lg backdrop-blur-lg mx-2">
+              <CardHeader className="text-center space-y-2 pb-4">
+                <div className="flex items-center justify-center space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowResetPassword(false)}
+                    className="p-1"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                  </Button>
+                  <CardTitle className="text-xl font-bold text-gray-800">
+                    Reset Password
+                  </CardTitle>
+                </div>
+                <CardDescription className="text-gray-600 text-sm">
+                  Enter your email to receive a reset link 📧
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-4">
+                <form onSubmit={handleResetPassword} className="space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium text-gray-700">Email</label>
+                    <Input
+                      type="email"
+                      placeholder="your@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="rounded-2xl border-pink-200 focus:border-pink-400 focus:ring-pink-400 text-sm"
+                      required
+                    />
+                  </div>
+
+                  <Button 
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full rounded-2xl bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white font-medium py-2 transition-all duration-300 hover:scale-105 shadow-kawaii text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? 'Sending...' : 'Send Reset Link 📧'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
@@ -248,6 +327,19 @@ const AuthScreen = ({ onLogin }: AuthScreenProps) => {
                   {isLoading ? 'Please wait...' : (isLogin ? 'Sign In 💖' : 'Create Account 🌟')}
                 </Button>
               </form>
+
+              {/* Forgot Password Link */}
+              {isLogin && (
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowResetPassword(true)}
+                    className="text-pink-500 hover:text-pink-600 font-medium transition-colors text-sm"
+                  >
+                    Forgot your password?
+                  </button>
+                </div>
+              )}
 
               {/* Toggle between login/signup */}
               <div className="text-center">

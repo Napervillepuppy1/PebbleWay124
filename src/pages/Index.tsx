@@ -7,6 +7,7 @@ import Library from '@/components/Library';
 import GoalModal from '@/components/GoalModal';
 import Navigation from '@/components/Navigation';
 import AuthScreen from '@/components/AuthScreen';
+import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
 
 interface Goal {
   id: string;
@@ -19,8 +20,7 @@ interface Goal {
 }
 
 const Index = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState<{ email: string; username: string } | null>(null);
+  const { user, loading, signOut } = useSupabaseAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
@@ -28,14 +28,7 @@ const Index = () => {
   const [theme, setTheme] = useState('default');
 
   useEffect(() => {
-    // Check if user was previously logged in
-    const currentUserData = localStorage.getItem('kawaii-current-user');
-    if (currentUserData) {
-      const userData = JSON.parse(currentUserData);
-      setCurrentUser(userData);
-      setIsAuthenticated(true);
-    }
-
+    // Load goals from localStorage (will be migrated to Supabase later)
     const savedGoals = localStorage.getItem('kawaii-goals');
     if (savedGoals) {
       setGoals(JSON.parse(savedGoals));
@@ -48,15 +41,12 @@ const Index = () => {
   }, []);
 
   const handleLogin = (userData: { email: string; username: string }) => {
-    setCurrentUser(userData);
-    setIsAuthenticated(true);
-    localStorage.setItem('kawaii-current-user', JSON.stringify(userData));
+    // User data is now managed by Supabase auth
+    console.log('User logged in:', userData);
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setCurrentUser(null);
-    localStorage.removeItem('kawaii-current-user');
+  const handleLogout = async () => {
+    await signOut();
     setActiveTab('dashboard');
   };
 
@@ -138,8 +128,24 @@ const Index = () => {
     }
   };
 
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="phone-frame w-[375px] h-[750px] mx-auto bg-background rounded-[45px] shadow-2xl overflow-hidden border-4 border-gray-900 relative flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 flex items-center justify-center mx-auto mb-4 animate-spin">
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full"></div>
+            </div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Show auth screen if not authenticated
-  if (!isAuthenticated) {
+  if (!user) {
     return <AuthScreen onLogin={handleLogin} />;
   }
 
